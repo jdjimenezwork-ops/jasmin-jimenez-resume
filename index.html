@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV - Jasmin Jimenez</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #4A4A4A;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 0.5rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            background-color: #D4C4B3;
+            border: 3px solid #FDFBF8;
+        }
+        .timeline-item.active::before {
+            background-color: #A88B64;
+        }
+        .skill-tag {
+            transition: all 0.3s ease;
+        }
+        .timeline-item.highlighted {
+            background-color: #F4ECE0;
+            border-color: #A88B64;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto p-4 sm:p-8 max-w-6xl">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12 border-b border-gray-200 pb-8">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">Jasmin Jimenez</h1>
+            <p class="text-xl text-gray-600 mt-2">Executive Virtual Assistant</p>
+            <div class="flex justify-center items-center space-x-4 mt-4 text-gray-500">
+                <span>&#128205; Sheffield, UK</span>
+                <span>&#9993; jdjimenez.work@gmail.com</span>
+                <span>&#128222; +44-787-950-8706</span>
+            </div>
+             <a href="https://www.linkedin.com/in/jasmin-jimenez-36b91834" target="_blank" class="inline-block mt-4 text-[#A88B64] hover:underline">LinkedIn Profile</a>
+        </header>
+
+        <main>
+            <!-- Professional Summary Section -->
+            <section id="summary" class="mb-16">
+                 <h2 class="text-2xl font-bold text-center mb-4 text-gray-700">Professional Summary</h2>
+                 <p class="text-center max-w-3xl mx-auto text-gray-600">
+                    This section provides a high-level overview of my professional background and career goals. It summarizes over a decade of experience in various support roles, highlighting my adaptability and commitment.
+                </p>
+                <div class="mt-6 p-6 bg-white rounded-lg shadow-sm">
+                    <p class="text-lg text-gray-700 leading-relaxed">An experienced professional with five years of diverse client support, known for exceptional efficiency and adaptability in meeting unique client needs. A skilled and organized professional with a solid foundation in administration, customer service, social media management, and report generation.</p>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-4 text-gray-700">Core Competencies</h2>
+                <p class="text-center max-w-3xl mx-auto text-gray-600 mb-8">
+                    Here you can explore my key skill sets. Hover over any skill category to see the related job roles in the Career Timeline below highlighted. This demonstrates the practical application of my abilities throughout my career.
+                </p>
+                <div id="skills-container" class="flex flex-wrap justify-center gap-4">
+                    <!-- Skills will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Experience Section -->
+            <section id="experience" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-4 text-gray-700">Career Timeline</h2>
+                 <p class="text-center max-w-3xl mx-auto text-gray-600 mb-12">
+                    Below is my professional journey. Click on any role in the timeline on the left to view the detailed responsibilities and achievements in the panel on the right. The currently selected role is highlighted for clarity.
+                </p>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <!-- Timeline -->
+                    <div class="relative">
+                        <div class="border-l-2 border-gray-200 absolute h-full left-[-2.25rem] top-2"></div>
+                        <div id="timeline-container" class="space-y-8">
+                            <!-- Timeline items will be dynamically inserted here -->
+                        </div>
+                    </div>
+                    <!-- Job Details -->
+                    <div id="details-container" class="bg-white p-6 rounded-lg shadow-sm sticky top-8 h-fit">
+                        <h3 id="details-title" class="text-xl font-bold text-gray-800 mb-2">Select a role to see details</h3>
+                        <p id="details-company" class="text-md text-gray-500 mb-4"></p>
+                        <ul id="details-list" class="list-disc list-inside text-gray-600 space-y-2">
+                           <li>Details about the selected role will appear here.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Expertise Distribution Chart Section -->
+            <section id="chart-section" class="mb-16">
+                <h2 class="text-2xl font-bold text-center mb-4 text-gray-700">Expertise Distribution</h2>
+                <p class="text-center max-w-3xl mx-auto text-gray-600 mb-8">
+                    This chart visually represents the distribution of my experience across key functional areas. It provides a quick overview of my primary strengths, based on the time spent in roles with significant responsibilities in each domain.
+                </p>
+                <div class="bg-white p-4 sm:p-6 rounded-lg shadow-sm">
+                    <div class="chart-container">
+                        <canvas id="experienceChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Education Section -->
+            <section id="education">
+                 <h2 class="text-2xl font-bold text-center mb-4 text-gray-700">Education</h2>
+                 <p class="text-center max-w-3xl mx-auto text-gray-600 mb-8">
+                    My formal academic qualification is listed below, which provided the foundational business knowledge for my career.
+                </p>
+                <div class="bg-white p-6 rounded-lg shadow-sm text-center">
+                    <h3 class="text-lg font-bold text-gray-800">Bachelor of Science in Business Administration</h3>
+                    <p class="text-md text-gray-600">Major in Business Management</p>
+                    <p class="text-md text-gray-500 mt-1">Holy Angel University, Pampanga, Philippines (2003 - 2007)</p>
+                </div>
+            </section>
+        </main>
+
+    </div>
+
+    <script>
+        const cvData = {
+            skills: [
+                { name: 'Administrative Skills', tags: ['admin', 'exec-support'] },
+                { name: 'Customer Service Skills', tags: ['customer-service', 'coordination'] },
+                { name: 'Social Media Management', tags: ['marketing', 'social-media'] },
+                { name: 'Logistics', tags: ['logistics'] },
+                { name: 'Reports Generation', tags: ['reports'] }
+            ],
+            experience: [
+                {
+                    id: 1,
+                    title: 'Associate Logistics Specialist',
+                    company: 'Algaecal',
+                    location: 'UK',
+                    period: '2024 - 2025',
+                    description: [
+                        'Coordinate and oversee daily logistics operations, including inventory management, shipping, and order fulfillment.',
+                        'Work closely with suppliers, freight carriers, and warehouse teams to ensure timely and cost-effective delivery of products.',
+                        'Monitor and track shipments, proactively resolving any delivery or supply chain issues.',
+                        'Maintain accurate records of shipments, invoices, and logistics documentation.'
+                    ],
+                    skillTags: ['logistics', 'coordination']
+                },
+                {
+                    id: 2,
+                    title: 'Virtual Assistant',
+                    company: 'Doxa7 Services',
+                    location: 'Remote',
+                    period: '2022 - 2023',
+                    description: [
+                        'Prepare reports, presentations, and other documents.',
+                        'Monitor project deadlines and summarize progress.',
+                        'Prepare expense reports and manage invoices.',
+                        'Monitor and update social media accounts.'
+                    ],
+                    skillTags: ['admin', 'exec-support', 'reports', 'social-media']
+                },
+                {
+                    id: 3,
+                    title: 'Marketing/Sales Assistant',
+                    company: 'Embark/Maker\'s Row',
+                    location: 'Remote',
+                    period: '2021 - 2022',
+                    description: [
+                        'Undertaking daily administrative tasks.',
+                        'Supporting marketing executives in organizing various projects.',
+                        'Social media management, social media metrics reporting, google analytics.',
+                        'Reportings for social media metrics.'
+                    ],
+                    skillTags: ['marketing', 'social-media', 'admin', 'reports']
+                },
+                {
+                    id: 4,
+                    title: 'Virtual Assistant',
+                    company: 'Can We Talk Pty Ltd',
+                    location: 'Remote',
+                    period: '2019 - 2021',
+                    description: [
+                        'Linkedin Management and Social Media Reporting.',
+                        'Uploading of blogs on sites and other social media platforms.',
+                        'Admin task as assigned by the CEO\'s Business Manager.',
+                        'Travel and Hotel bookings as per CEO\'s instructions.',
+                        'Transcription.'
+                    ],
+                    skillTags: ['admin', 'exec-support', 'social-media', 'marketing']
+                },
+                {
+                    id: 5,
+                    title: 'DevOps Assistant',
+                    company: 'MTG Media Group',
+                    location: 'Remote',
+                    period: '2018 - 2022',
+                    description: [
+                        'Proofing for various magazine platforms of the company.',
+                        'Support system in their ticketing system.',
+                        'Manages monthly reports and sends them out to the Plate Manager.',
+                        'Uploading of contents in their magazine - formatting it into a news content for clients.',
+                        'Basic HTML content making.',
+                        'Social media management.'
+                    ],
+                    skillTags: ['admin', 'reports', 'social-media']
+                },
+                {
+                    id: 6,
+                    title: 'Executive Services Specialist II',
+                    company: 'Cloudstaff Inc.',
+                    location: 'Remote',
+                    period: '2014 - 2018',
+                    description: [
+                        'Email Management/Filtering, Booking appointments with clients.',
+                        'Following up with clients/customers (sending thank you and other reminder emails) and Calendar Management.',
+                        'File Management (organizing files using Admin Inbox,etc).',
+                        'Data entry of home loans.',
+                        'Lodgement and tracking of Loan Proposals.',
+                        'Tracking of Post settlement loans, construction loans and progress payments.'
+                    ],
+                    skillTags: ['exec-support', 'admin', 'customer-service']
+                },
+                {
+                    id: 7,
+                    title: 'Executive Secretary/Administrative Assistant',
+                    company: 'Viskase Asia Pacific Corporation',
+                    location: 'Manila, Philippines',
+                    period: '2011 - 2014',
+                    description: [
+                        'Prepares agendas and make arrangement for management meetings.',
+                        'Travel arrangements.',
+                        'Processing of visas.',
+                        'Process purchase requisitions through SAP and ensures that office supplies are readily available within the deadline.',
+                        'Spearhead employee and company activities.'
+                    ],
+                    skillTags: ['exec-support', 'admin', 'coordination']
+                }
+            ]
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const skillsContainer = document.getElementById('skills-container');
+            const timelineContainer = document.getElementById('timeline-container');
+            const detailsTitle = document.getElementById('details-title');
+            const detailsCompany = document.getElementById('details-company');
+            const detailsList = document.getElementById('details-list');
+
+            // Populate Skills
+            cvData.skills.forEach(skill => {
+                const skillEl = document.createElement('div');
+                skillEl.className = 'skill-tag cursor-pointer bg-white text-gray-700 py-2 px-4 rounded-full shadow-sm hover:bg-[#A88B64] hover:text-white hover:shadow-md';
+                skillEl.textContent = skill.name;
+                skillEl.dataset.skillTags = JSON.stringify(skill.tags);
+                skillsContainer.appendChild(skillEl);
+
+                skillEl.addEventListener('mouseover', () => {
+                    const tags = JSON.parse(skillEl.dataset.skillTags);
+                    document.querySelectorAll('.timeline-item').forEach(item => {
+                        const itemTags = JSON.parse(item.dataset.skillTags);
+                        if (tags.some(tag => itemTags.includes(tag))) {
+                            item.classList.add('highlighted');
+                        }
+                    });
+                });
+
+                skillEl.addEventListener('mouseout', () => {
+                    document.querySelectorAll('.timeline-item').forEach(item => {
+                        item.classList.remove('highlighted');
+                    });
+                });
+            });
+
+            // Populate Timeline
+            cvData.experience.forEach((job, index) => {
+                const jobEl = document.createElement('div');
+                jobEl.className = 'timeline-item relative pl-8 pb-8 cursor-pointer border border-transparent rounded-lg p-4 transition-all duration-300';
+                jobEl.dataset.id = job.id;
+                jobEl.dataset.skillTags = JSON.stringify(job.skillTags);
+
+                jobEl.innerHTML = `
+                    <h3 class="text-lg font-bold text-gray-800">${job.title}</h3>
+                    <p class="text-md text-gray-600">${job.company}</p>
+                    <p class="text-sm text-gray-400">${job.period}</p>
+                `;
+                timelineContainer.appendChild(jobEl);
+
+                jobEl.addEventListener('click', () => {
+                    const selectedJob = cvData.experience.find(j => j.id == job.id);
+                    detailsTitle.textContent = selectedJob.title;
+                    detailsCompany.innerHTML = `${selectedJob.company} &bull; ${selectedJob.period}`;
+                    detailsList.innerHTML = '';
+                    selectedJob.description.forEach(desc => {
+                        const li = document.createElement('li');
+                        li.textContent = desc;
+                        detailsList.appendChild(li);
+                    });
+
+                    document.querySelectorAll('.timeline-item').forEach(item => item.classList.remove('active'));
+                    jobEl.classList.add('active');
+                });
+
+                if (index === 0) {
+                    jobEl.click();
+                }
+            });
+            
+            // Chart.js Implementation
+            const ctx = document.getElementById('experienceChart').getContext('2d');
+            const experienceData = {
+                'Admin & Exec Support': 8,
+                'Marketing & Social Media': 5,
+                'Customer Service': 4,
+                'Logistics & Coordination': 4,
+            };
+
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(experienceData),
+                    datasets: [{
+                        label: 'Years of Experience',
+                        data: Object.values(experienceData),
+                        backgroundColor: '#D4C4B3',
+                        borderColor: '#A88B64',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        hoverBackgroundColor: '#A88B64'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        },
+                        y: {
+                             grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: "'Inter', sans-serif"
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: '#4A4A4A',
+                            titleFont: {
+                                family: "'Inter', sans-serif",
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                family: "'Inter', sans-serif",
+                                size: 12
+                            },
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.x !== null) {
+                                        label += context.parsed.x + ' years';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
